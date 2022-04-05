@@ -1,0 +1,11 @@
+# vps's ip, port, password
+SERVER_IP
+SERVER_PORT
+SERVER_USER_ID
+
+# router's ip
+ROUTER_IP
+
+# 
+PROXY_IP
+PROXY_PORT
