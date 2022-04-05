@@ -3,7 +3,7 @@
 package/*.zip
 package/fhs-install-v2ray/
 
-templates.resolved/
+vm_templates.resolved/
 
 settings.ini
 

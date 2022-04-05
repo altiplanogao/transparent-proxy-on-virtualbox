@@ -44,10 +44,10 @@ Vagrant.configure("2") do |config|
       # copy private key so hosts can ssh using key authentication (the script below sets permissions to 600)
       node.vm.provision "file", source: "~/.ssh/id_rsa.pub", destination: "host_id_rsa.pub"
       node.vm.provision "file", source: "package", destination: "$HOME/"
-      node.vm.provision "file", source: "templates.resolved", destination: "$HOME/"
-      node.vm.provision "shell", path: "scripts/login_disable_password.sh"
-      node.vm.provision "shell", path: "scripts/login_enable_key.sh", privileged: false
-      node.vm.provision "shell", path: "scripts/vm_bootstrap.sh"
+      node.vm.provision "file", source: "vm_templates.resolved", destination: "$HOME/"
+      node.vm.provision "shell", path: "scripts/vm/login_disable_password.sh"
+      node.vm.provision "shell", path: "scripts/vm//login_enable_key.sh", privileged: false
+      node.vm.provision "shell", path: "scripts/vm//bootstrap.sh"
     end
   end
 end

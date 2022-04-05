@@ -6,8 +6,8 @@ expand_config() {
     . $BASEDIR/settings.ini
 
     PKG_DIR=$BASEDIR/package
-    TPL_DIR=$BASEDIR/templates
-    TPL_RESOLVED_DIR=$BASEDIR/templates.resolved
+    TPL_DIR=$BASEDIR/templates/vm
+    TPL_RESOLVED_DIR=$BASEDIR/vm_templates.resolved
 
     RELEASE_FILE_NAME="v2ray-linux-$MACHINE.zip"
     RELEASE_FILE="${PKG_DIR}/$RELEASE_FILE_NAME"

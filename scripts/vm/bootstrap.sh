@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-mv /home/vagrant/templates.resolved /templates.resolved
+mv /home/vagrant/vm_templates.resolved /templates.resolved
 mv /home/vagrant/package /resources
 
 # set resolved.conf
