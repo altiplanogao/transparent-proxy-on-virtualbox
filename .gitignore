@@ -1,4 +1,6 @@
 package/*.zip
+package/fhs-install-v2ray/
+
 templates.applied/
 
 settings.ini
