@@ -1,0 +1,10 @@
+[Unit]
+Description=Job that start proxy
+
+[Service]
+ExecStart=/proxy_vm_start.sh
+Type=oneshot
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

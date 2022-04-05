@@ -1,10 +1,12 @@
 {
   "log": {
-    "loglevel": "warning"
+    "loglevel": "warning",
+    "access": "/var/log/v2ray/access.log",
+    "error": "/var/log/v2ray/error.log"
   },
   "inbounds": [{
-    "port": PROXY_IP,
-    "listen": "127.0.0.1",
+    "port": PROXY_PORT,
+    "listen": "0.0.0.0",
     "tag": "socks-inbound",
     "protocol": "socks",
     "settings": {

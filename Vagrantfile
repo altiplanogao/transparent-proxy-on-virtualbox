@@ -9,8 +9,6 @@ SUPPORTED_OS = {
 
 $lan_ip = ENV['LAN_IP']
 $bridge = ENV['BRIDGE_NAME']
-printf "ip is: %s\n", $lan_ip
-printf "use bridge: %s\n", $bridge
 $num_instances = 1
 $vm_memory = 512
 $vm_cpus = 1
@@ -45,11 +43,11 @@ Vagrant.configure("2") do |config|
       end
       # copy private key so hosts can ssh using key authentication (the script below sets permissions to 600)
       node.vm.provision "file", source: "~/.ssh/id_rsa.pub", destination: "host_id_rsa.pub"
-      node.vm.provision "file", source: "res/package", destination: "$HOME/v2ray/"
-      node.vm.provision "file", source: "res/templates", destination: "$HOME/v2ray/"
+      node.vm.provision "file", source: "package", destination: "$HOME/"
+      node.vm.provision "file", source: "templates.resolved", destination: "$HOME/"
       node.vm.provision "shell", path: "scripts/login_disable_password.sh"
       node.vm.provision "shell", path: "scripts/login_enable_key.sh", privileged: false
-      node.vm.provision "shell", path: "scripts/vm_bootstrap.sh", privileged: false
+      node.vm.provision "shell", path: "scripts/vm_bootstrap.sh"
     end
   end
 end

@@ -1,6 +1,10 @@
+.vagrant/
+
 package/*.zip
 package/fhs-install-v2ray/
 
-templates.applied/
+templates.resolved/
 
 settings.ini
+
+*.log
