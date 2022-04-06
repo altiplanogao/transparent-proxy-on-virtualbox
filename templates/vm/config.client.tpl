@@ -4,7 +4,23 @@
     "access": "/var/log/v2ray/access.log",
     "error": "/var/log/v2ray/error.log"
   },
-  "inbounds": [{
+  "inbounds": [
+    {
+      "tag":"transparent",
+      "port": 12345,
+      "protocol": "dokodemo-door",
+      "settings": {
+        "network": "tcp,udp",
+        "followRedirect": true
+      },
+      "sniffing": {
+        "enabled": true,
+        "destOverride": [
+          "http",
+          "tls"
+        ]
+      }
+    },{
     "port": PROXY_PORT,
     "listen": "0.0.0.0",
     "tag": "socks-inbound",
@@ -17,9 +33,16 @@
     "sniffing": {
       "enabled": true,
       "destOverride": ["http", "tls"]
+    },
+    "streamSettings": {
+      "sockopt": {
+        "tproxy": "tproxy"
+      }
     }
   }],
-  "outbounds": [{
+  "outbounds": [
+  {
+    "tag": "proxy",
     "protocol": "vmess",
     "settings": {
       "vnext": [
@@ -35,24 +58,53 @@
         }
       ]
     },
-    "mux": {"enabled": true},
-    "tag": "proxy"
+    "streamSettings": { "sockopt": { "mark": 255 } },
+    "mux": {"enabled": true}
   },{
+    "tag": "direct",
     "protocol": "freedom",
     "settings": {},
-    "tag": "direct"
+    "streamSettings": { "sockopt": { "mark": 255 } }
   },{
+    "tag": "blocked",
     "protocol": "blackhole",
-    "settings": {},
-    "tag": "blocked"
+    "settings": {}
+  },{
+    "tag": "dns-out",
+    "protocol": "dns",
+    "streamSettings": { "sockopt": { "mark": 255 } }
   }],
   "routing": {
     "domainStrategy": "IPOnDemand",
     "rules":[
       {
         "type": "field",
+        "inboundTag": [
+          "transparent"
+        ],
+        "port": 53,
+        "network": "udp",
+        "outboundTag": "dns-out" 
+      },
+      {
+        "type": "field",
         "domain": ["geosite:cn"],
         "outboundTag": "direct"
+      },{
+        "type": "field", 
+        "ip": [ 
+          "223.5.5.5",
+          "114.114.114.114"
+        ],
+        "outboundTag": "direct"
+      },
+      {
+        "type": "field",
+        "ip": [ 
+          "8.8.8.8",
+          "1.1.1.1"
+        ],
+        "outboundTag": "proxy"
       },
       {
         "type": "field",
@@ -78,6 +130,7 @@
       "domain:shadowsocks.org": "electronicsrealm.com"
     },
     "servers": [
+      "8.8.8.8",
       "1.1.1.1",
       {
         "address": "114.114.114.114",
@@ -86,7 +139,6 @@
           "geosite:cn"
         ]
       },
-      "8.8.8.8",
       "localhost"
     ]
   },

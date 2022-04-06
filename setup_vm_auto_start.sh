@@ -12,7 +12,7 @@ main() {
     
     chmod +x $BASEDIR/scripts/host/*.sh
     
-    $BASEDIR/scripts/host/setup_vm_auto_start.sh
+    $BASEDIR/scripts/host/setup_gateway_proxy.sh
 }
 
 main "$@"
