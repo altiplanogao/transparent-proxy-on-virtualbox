@@ -6,40 +6,21 @@
   },
   "inbounds": [
     {
-      "tag":"transparent",
-      "port": 12345,
-      "protocol": "dokodemo-door",
+      "tag": "socks-inbound",
+      "port": PROXY_PORT,
+      "listen": "0.0.0.0",
+      "protocol": "socks",
       "settings": {
-        "network": "tcp,udp",
-        "followRedirect": true
+        "auth": "noauth",
+        "udp": false,
+        "ip": "127.0.0.1"
       },
       "sniffing": {
         "enabled": true,
-        "destOverride": [
-          "http",
-          "tls"
-        ]
-      }
-    },{
-    "port": PROXY_PORT,
-    "listen": "0.0.0.0",
-    "tag": "socks-inbound",
-    "protocol": "socks",
-    "settings": {
-      "auth": "noauth",
-      "udp": false,
-      "ip": "127.0.0.1"
-    },
-    "sniffing": {
-      "enabled": true,
-      "destOverride": ["http", "tls"]
-    },
-    "streamSettings": {
-      "sockopt": {
-        "tproxy": "tproxy"
+        "destOverride": ["http", "tls"]
       }
     }
-  }],
+  ],
   "outbounds": [
   {
     "tag": "proxy",
@@ -58,21 +39,18 @@
         }
       ]
     },
-    "streamSettings": { "sockopt": { "mark": 255 } },
     "mux": {"enabled": true}
   },{
     "tag": "direct",
     "protocol": "freedom",
-    "settings": {},
-    "streamSettings": { "sockopt": { "mark": 255 } }
+    "settings": {}
   },{
     "tag": "blocked",
     "protocol": "blackhole",
     "settings": {}
   },{
     "tag": "dns-out",
-    "protocol": "dns",
-    "streamSettings": { "sockopt": { "mark": 255 } }
+    "protocol": "dns"
   }],
   "routing": {
     "domainStrategy": "IPOnDemand",

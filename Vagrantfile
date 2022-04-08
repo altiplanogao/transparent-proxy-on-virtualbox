@@ -40,7 +40,9 @@ Vagrant.configure("2") do |config|
         v.name = node_name
         v.cpus = $vm_cpus
         v.memory = $vm_memory
-      end
+        v.customize ["modifyvm", :id, "--vram", "8"] # ubuntu defaults to 256 MB which is a waste of precious RAM
+        v.customize ["modifyvm", :id, "--audio", "none"]
+     end
       # copy private key so hosts can ssh using key authentication (the script below sets permissions to 600)
       node.vm.provision "file", source: "~/.ssh/id_rsa.pub", destination: "host_id_rsa.pub"
       node.vm.provision "file", source: "package", destination: "$HOME/"

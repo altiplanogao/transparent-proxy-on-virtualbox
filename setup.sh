@@ -13,25 +13,58 @@ if [ "${sudoer}" != "" ] ; then
     exit 1
 fi
 
-pushd $BASEDIR
-    echo "RUN: destroy old vm (if exists)"
-    # sudo -u ${username} 'vagrant destroy -f'
-    vagrant destroy -f
+if [[ -f "~/.ssh/id_rsa" ]] ; then
+    ssh-keygen -t rsa -f ~/.ssh/id_rsa
+fi
 
-    echo "RUN: setup vm"
-    # /bin/su -c  './setup_vm.sh' ${username}
-    ./setup_vm.sh
+do_install_vm() {
+    pushd $BASEDIR
+        echo "RUN: destroy old vm (if exists)"
+        # sudo -u ${username} 'vagrant destroy -f'
+        vagrant destroy -f
 
-    echo "RUN: shutdown vm"
-    # runuser -l ${username} -c 'vagrant halt'
-    vagrant halt
-popd
+        echo "RUN: setup vm"
+        # /bin/su -c  './setup_vm.sh' ${username}
+        ./setup_vm.sh
+    popd
+}
 
-echo "RUN: make vm auto start on host"
-sudo $BASEDIR/setup_vm_auto_start.sh
+do_setup_autostart() {
+    pushd $BASEDIR
+        echo "RUN: shutdown vm"
+        # runuser -l ${username} -c 'vagrant halt'
+        vagrant halt
+    popd
 
-pushd $BASEDIR
-    echo "RUN: start vm"
-    # runuser -l ${username} -c 'vagrant up'
-    vagrant up
-popd
+    echo "RUN: make vm auto start on host"
+    sudo $BASEDIR/setup_vm_auto_start.sh
+
+    pushd $BASEDIR
+        echo "RUN: start vm"
+        # runuser -l ${username} -c 'vagrant up'
+        vagrant up
+    popd
+}
+
+ask_and_do_setup_autostart() {
+    while true
+    do
+        read -r -p "Make the vm startup on boot? (Y/n):" input
+        case $input in
+            [yY][eE][sS]|[yY])
+                do_setup_autostart
+                exit 0
+                ;;
+            [nN][oO]|[nN])
+                echo "Done"
+                exit 0
+                ;;
+            *)
+                echo "Invalid input..."
+                ;;
+        esac
+    done
+}
+
+do_install_vm
+ask_and_do_setup_autostart
