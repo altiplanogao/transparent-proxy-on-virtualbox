@@ -7,14 +7,17 @@ SUPPORTED_OS = {
   "ubuntu2004"          => {box: "generic/ubuntu2004",         user: "vagrant"},
 }
 
-$lan_ip = ENV['LAN_IP']
+$lan_ip = ENV['PROXY_IP']
 $bridge = ENV['BRIDGE_NAME']
+$net_mask = ENV['LAN_NETMASK_EXPAND']
+$router_ip=ENV['ROUTER_IP']
 $num_instances = 1
 $vm_memory = 512
 $vm_cpus = 1
 $instance_name_prefix = "v2ray-proxy"
 $os ||= "ubuntu2004"
 
+puts "netmask: %s" % $net_mask
 host_vars = {}
 # All Vagrant configuration is done below. The "2" in Vagrant.configure
 # configures the configuration version (we support older styles for
@@ -34,7 +37,7 @@ Vagrant.configure("2") do |config|
       node.vm.box = $box
 
       # node.vm.network "private_network" , ip: "192.168.59.101"
-      node.vm.network "public_network" , ip:$lan_ip , bridge: $bridge
+      node.vm.network "public_network" , ip:$lan_ip , bridge: $bridge , netmask:$net_mask
 
       node.vm.provider "virtualbox" do |v|
         v.name = node_name
@@ -44,12 +47,13 @@ Vagrant.configure("2") do |config|
         v.customize ["modifyvm", :id, "--audio", "none"]
      end
       # copy private key so hosts can ssh using key authentication (the script below sets permissions to 600)
+      node.vm.provision "file", source: "~/.ssh/authorized_keys", destination: ".ssh/authorized_keys"
       node.vm.provision "file", source: "~/.ssh/id_rsa.pub", destination: "host_id_rsa.pub"
       node.vm.provision "file", source: "package", destination: "$HOME/"
       node.vm.provision "file", source: "vm_templates.resolved", destination: "$HOME/"
-      node.vm.provision "shell", path: "scripts/vm/login_disable_password.sh"
-      node.vm.provision "shell", path: "scripts/vm//login_enable_key.sh", privileged: false
       node.vm.provision "shell", path: "scripts/vm//bootstrap.sh"
+      node.vm.provision "shell", path: "scripts/vm/login_enable_key.sh", privileged: false
+      node.vm.provision "shell", path: "scripts/vm/login_disable_password.sh"
     end
   end
 end

@@ -6,17 +6,15 @@
 
 * virtualbox
 * vagrant
+* ipcalc
 
 ## create setting file
 
 ``` shell
+git clone git@github.com:altiplanogao/transparent-proxy-on-virtualbox.git
+cd transparent-proxy-on-virtualbox
 cp settings.ini.template settings.ini
 vi settings.ini
-```
-
-## run using normal user (with sudo privilege)
-``` shell
-$ ./setup.sh
 ```
 
 ## update arch or v2ray version if necessary
@@ -24,7 +22,12 @@ $ ./setup.sh
 $ vi config.sh
 ```
 
-## download binary files and save to 'package' directory if auto downloading fails
+## run using normal user (with sudo privilege)
+``` shell
+$ ./setup.sh
+```
+
+## Tips: download binary files and save to 'package' directory if auto downloading fails
 ```
 $ pwd
 .../transparent-proxy-on-virtualbox
@@ -42,3 +45,9 @@ $ tree
 ├── <... whatever ...>
 └── <... whatever ...>
 ```
+
+Config default gateway on your home router
+
+Tips: to install an AP device on raspberry (2 steps only):
+* [OpenWrt as client device](https://openwrt.org/docs/guide-user/network/openwrt_as_clientdevice)
+* [Enabling a Wi-Fi access point on OpenWrt](https://openwrt.org/docs/guide-quick-start/basic_wifi)

@@ -1,9 +1,37 @@
 #!/usr/bin/env bash
 
+BASEDIR=$(dirname "$0")
+
+. $BASEDIR/scripts/common.sh
+
+expand_setting() {
+    echo "EXPAND SETTING using \"${ROUTER_ADDRESS}\""
+    # will generate (by ipcalc using ${ROUTER_ADDRESS})
+    # LAN_NETWORK="10.1.0.0/16"
+    # LAN_NETMASK=16
+    # LAN_NETMASK_EXPAND="255.255.0.0"
+    # ROUTER_IP="10.1.1.1"
+
+    LAN_NETWORK=`ipcalc -n -b ${ROUTER_ADDRESS} | grep Network | sed "s|Network:||g" | sed "s/^[[:space:]]*//g"`
+    LAN_NETWORK=`trim ${LAN_NETWORK}`
+    echo "LAN_NETWORK: \"${LAN_NETWORK}\""
+
+    local lan_netmask_str=`ipcalc -n -b ${ROUTER_ADDRESS} | grep Netmask | sed "s|Netmask:||g" | sed "s/^[[:space:]]*//g"`
+    local lan_netmasks=(${lan_netmask_str//=/ }) 
+    LAN_NETMASK_EXPAND=`trim ${lan_netmasks[0]}`
+    LAN_NETMASK=`trim ${lan_netmasks[1]}`
+    echo "LAN_NETMASK_EXPAND: \"${LAN_NETMASK_EXPAND}\""
+    echo "LAN_NETMASK: \"${LAN_NETMASK}\""
+
+    ROUTER_IP=`ipcalc -n -b ${ROUTER_ADDRESS} | grep Address | sed "s|Address:||g" | sed "s/^[[:space:]]*//g"`
+    ROUTER_IP=`trim ${ROUTER_IP}`
+    echo "ROUTER_IP: \"${ROUTER_IP}\""
+}
+
 expand_config() {
-    BASEDIR=$(dirname "$0")
     . $BASEDIR/config.sh
     . $BASEDIR/settings.ini
+    expand_setting
 
     PKG_DIR=$BASEDIR/package
     TPL_DIR=$BASEDIR/templates/vm
@@ -71,14 +99,21 @@ fill_templates() {
     do
         local newfn=${fn:0:-4}
         echo "  processing: ${fn} -> ${newfn}"
-        sed -i "s|SERVER_IP|${SERVER_IP}|g" ${fn}
-        sed -i "s|SERVER_PORT|${SERVER_PORT}|g" ${fn}
-        sed -i "s|SERVER_USER_ID|${SERVER_USER_ID}|g" ${fn}
-        sed -i "s|ROUTER_IP|${ROUTER_IP}|g" ${fn}
-        sed -i "s|PROXY_IP|${PROXY_IP}|g" ${fn}
-        sed -i "s|PROXY_PORT|${PROXY_PORT}|g" ${fn}
-        sed -i "s|SERVER_TRANSP_PORT|${SERVER_TRANSP_PORT}|g" ${fn}
-        sed -i "s|LAN_SUB_NET|${LAN_SUB_NET}|g" ${fn}
+
+        sed -i "s|%SERVER_IP%|${SERVER_IP}|g" ${fn}
+        sed -i "s|%SERVER_PORT%|${SERVER_PORT}|g" ${fn}
+        sed -i "s|%SERVER_USER_ID%|${SERVER_USER_ID}|g" ${fn}
+
+        sed -i "s|%ROUTER_ADDRESS%|${ROUTER_ADDRESS}|g" ${fn}
+
+        sed -i "s|%PROXY_IP%|${PROXY_IP}|g" ${fn}
+        sed -i "s|%PROXY_PORT%|${PROXY_PORT}|g" ${fn}
+        sed -i "s|%PROXY_TRANSP_PORT%|${PROXY_TRANSP_PORT}|g" ${fn}
+
+        sed -i "s|%ROUTER_IP%|${ROUTER_IP}|g" ${fn}
+        sed -i "s|%LAN_NETWORK%|${LAN_NETWORK}|g" ${fn}
+        sed -i "s|%LAN_NETMASK%|${LAN_NETMASK}|g" ${fn}
+        sed -i "s|%LAN_NETMASK_EXPAND%|${LAN_NETMASK_EXPAND}|g" ${fn}
 
         mv $fn $newfn
     done
@@ -147,10 +182,12 @@ prepare_vagrant_params() {
 }
 
 vagrant_up() {
-    LAN_IP=${PROXY_IP}
-    export LAN_IP
+    PROXY_IP=${PROXY_IP}
+    export PROXY_IP
     export BRIDGE_NAME
-    echo "Pull up proxy vm using \"${BRIDGE_NAME}\"(${LAN_IP})"
+    export LAN_NETMASK_EXPAND
+    export ROUTER_IP
+    echo "Pull up proxy vm using \"${BRIDGE_NAME}\"(${PROXY_IP})"
 
     pushd $BASEDIR
         # vagrant destroy -f

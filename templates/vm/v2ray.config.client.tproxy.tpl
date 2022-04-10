@@ -6,6 +6,27 @@
   },
   "inbounds": [
     {
+      "tag":"transparent",
+      "port": %PROXY_TRANSP_PORT%,
+      "protocol": "dokodemo-door",
+      "settings": {
+        "network": "tcp,udp",
+        "followRedirect": true
+      },
+      "sniffing": {
+        "enabled": true,
+        "destOverride": [
+          "http",
+          "tls"
+        ]
+      },
+      "streamSettings": {
+        "sockopt": {
+          "tproxy": "tproxy",
+          "mark":255
+        }
+      }
+    },{
       "tag": "socks-inbound",
       "port": %PROXY_PORT%,
       "listen": "0.0.0.0",
@@ -39,18 +60,21 @@
         }
       ]
     },
+    "streamSettings": { "sockopt": { "mark": 255 } },
     "mux": {"enabled": true}
   },{
     "tag": "direct",
     "protocol": "freedom",
-    "settings": {}
+    "settings": {},
+    "streamSettings": { "sockopt": { "mark": 255 } }
   },{
     "tag": "blocked",
     "protocol": "blackhole",
     "settings": {}
   },{
     "tag": "dns-out",
-    "protocol": "dns"
+    "protocol": "dns",
+    "streamSettings": { "sockopt": { "mark": 255 } }
   }],
   "routing": {
     "domainStrategy": "IPOnDemand",

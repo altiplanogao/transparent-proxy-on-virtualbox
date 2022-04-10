@@ -1,21 +1,24 @@
 #!/usr/bin/env bash
+set -o errexit
 
 BASEDIR=$(dirname "$0")
 echo "RUN SETUP under dir: ${BASEDIR}"
 
 . $BASEDIR/scripts/common.sh
 
-username=`id -u -n`
-sudoer=${SUDO_USER}
-echo "user: \"${username}\", sudoer: \"${sudoer}\""
-if [ "${sudoer}" != "" ] ; then
-    echo "[ERROR] should run as normal user."
-    exit 1
-fi
+should_run_as_normal_user() {
+    username=`id -u -n`
+    sudoer=${SUDO_USER}
+    echo "user: \"${username}\", sudoer: \"${sudoer}\""
+    if [ "${sudoer}" != "" ] ; then
+        echo "[ERROR] should run as normal user."
+        exit 1
+    fi
 
-if [[ -f "~/.ssh/id_rsa" ]] ; then
-    ssh-keygen -t rsa -f ~/.ssh/id_rsa
-fi
+    if [[ -f "~/.ssh/id_rsa" ]] ; then
+        ssh-keygen -t rsa -f ~/.ssh/id_rsa
+    fi
+}
 
 do_install_vm() {
     pushd $BASEDIR
@@ -66,5 +69,6 @@ ask_and_do_setup_autostart() {
     done
 }
 
+should_run_as_normal_user
 do_install_vm
 ask_and_do_setup_autostart

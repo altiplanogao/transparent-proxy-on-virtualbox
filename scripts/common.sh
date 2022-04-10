@@ -13,3 +13,10 @@ check_if_running_as_root() {
     fi
   fi
 }
+
+trim() {
+  local var="$*"
+  var="${var#"${var%%[![:space:]]*}"}"
+  var="${var%"${var##*[![:space:]]}"}"
+  echo "$var"  
+}

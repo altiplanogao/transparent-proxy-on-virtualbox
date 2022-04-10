@@ -14,7 +14,7 @@
 # TEMPLATE FOR /etc/systemd/resolved.conf
 
 [Resolve]
-DNS=ROUTER_IP
+DNS=%ROUTER_IP%
 #FallbackDNS=
 #Domains=
 #LLMNR=no

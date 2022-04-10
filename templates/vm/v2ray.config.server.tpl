@@ -6,12 +6,12 @@
     },
     "inbounds": [
         {
-            "port": SERVER_PORT,
+            "port": %SERVER_PORT%,
             "protocol": "vmess",
             "settings": {
                 "clients": [
                     {
-                        "id": "SERVER_USER_ID",
+                        "id": "%SERVER_USER_ID%",
                         "alterId": 0
                     }
                 ]
