@@ -1,15 +1,18 @@
 #!/usr/bin/env bash
-set -o errexit
+# set -o errexit
+
+echo "BASEDIR @: \"${BASEDIR}\""
 
 BASEDIR=$(dirname "$0")
 echo "RUN SETUP under dir: ${BASEDIR}"
 
+. $BASEDIR/scripts/host/utils.sh
 . $BASEDIR/scripts/common.sh
 
 should_run_as_normal_user() {
     username=`id -u -n`
     sudoer=${SUDO_USER}
-    echo "user: \"${username}\", sudoer: \"${sudoer}\""
+    echo "script user: \"${username}\", sudoer: \"${sudoer}\""
     if [ "${sudoer}" != "" ] ; then
         echo "[ERROR] should run as normal user."
         exit 1
@@ -22,17 +25,21 @@ should_run_as_normal_user() {
 
 do_install_vm() {
     pushd $BASEDIR
+
         echo "RUN: destroy old vm (if exists)"
-        # sudo -u ${username} 'vagrant destroy -f'
         vagrant destroy -f
 
         echo "RUN: setup vm"
-        # /bin/su -c  './setup_vm.sh' ${username}
-        ./setup_vm.sh
+        download_v2ray
+        download_fhs_install_v2ray
+        fill_templates
+
+        vagrant up
     popd
 }
 
 do_setup_autostart() {
+    vagrant_env_prepare
     pushd $BASEDIR
         echo "RUN: shutdown vm"
         # runuser -l ${username} -c 'vagrant halt'
@@ -40,7 +47,7 @@ do_setup_autostart() {
     popd
 
     echo "RUN: make vm auto start on host"
-    sudo $BASEDIR/setup_vm_auto_start.sh
+    sudo -E $BASEDIR/scripts/host/make_vm_auto_start.sh
 
     pushd $BASEDIR
         echo "RUN: start vm"
@@ -70,5 +77,9 @@ ask_and_do_setup_autostart() {
 }
 
 should_run_as_normal_user
+expand_config
+prepare_vagrant_params
+vagrant_env_prepare
+
 do_install_vm
 ask_and_do_setup_autostart

@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 
-BASEDIR=$(dirname "$0")
+echo "BASEDIR @: \"${BASEDIR}\""
+if [ -z ${BASEDIR} ];then
+    BASEDIR=$(dirname "$0")/../..
+    echo "BASEDIR @: \"${BASEDIR}\""
+fi
 
 . $BASEDIR/scripts/common.sh
 
@@ -26,6 +30,11 @@ expand_setting() {
     ROUTER_IP=`ipcalc -n -b ${ROUTER_ADDRESS} | grep Address | sed "s|Address:||g" | sed "s/^[[:space:]]*//g"`
     ROUTER_IP=`trim ${ROUTER_IP}`
     echo "ROUTER_IP: \"${ROUTER_IP}\""
+
+
+    echo "EXPAND SETTING using \"${PROXY_IP}\""
+    VM_NAME="v2ray-proxy-"${PROXY_IP//./-}
+    echo "VM_NAME: \"${VM_NAME}\""
 }
 
 expand_config() {
@@ -181,27 +190,12 @@ prepare_vagrant_params() {
     echo "  Will use bridge: \"${BRIDGE_NAME}\"(${BRIDGE_IP})"
 }
 
-vagrant_up() {
+vagrant_env_prepare() {
     PROXY_IP=${PROXY_IP}
     export PROXY_IP
     export BRIDGE_NAME
     export LAN_NETMASK_EXPAND
     export ROUTER_IP
-    echo "Pull up proxy vm using \"${BRIDGE_NAME}\"(${PROXY_IP})"
-
-    pushd $BASEDIR
-        # vagrant destroy -f
-        vagrant up
-    popd
+    export VM_NAME
 }
 
-main() {
-    expand_config
-    download_v2ray
-    download_fhs_install_v2ray
-    fill_templates
-    prepare_vagrant_params
-    vagrant_up
-}
-
-main "$@"
