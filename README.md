@@ -13,13 +13,13 @@
 ``` shell
 git clone git@github.com:altiplanogao/transparent-proxy-on-virtualbox.git
 cd transparent-proxy-on-virtualbox
-cp settings.ini.template settings.ini
-vi settings.ini
+cp config.ini.template config.ini
+vi config.ini
 ```
 
 ## update arch or v2ray version if necessary
 ```
-$ vi config.sh
+$ vi config_v2ray.sh
 ```
 
 ## run using normal user (with sudo privilege)

@@ -8,7 +8,7 @@ fi
 
 . $BASEDIR/scripts/common.sh
 
-expand_setting() {
+expand_user_config() {
     echo "EXPAND SETTING using \"${ROUTER_ADDRESS}\""
     # will generate (by ipcalc using ${ROUTER_ADDRESS})
     # LAN_NETWORK="10.1.0.0/16"
@@ -38,9 +38,9 @@ expand_setting() {
 }
 
 expand_config() {
-    . $BASEDIR/config.sh
-    . $BASEDIR/settings.ini
-    expand_setting
+    . $BASEDIR/config_v2ray.sh
+    . $BASEDIR/config.ini
+    expand_user_config
 
     PKG_DIR=$BASEDIR/package
     TPL_DIR=$BASEDIR/templates/vm

@@ -5,6 +5,6 @@ package/fhs-install-v2ray/
 
 vm_templates.resolved/
 
-settings.ini
+config.ini
 
 *.log

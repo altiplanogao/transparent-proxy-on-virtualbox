@@ -37,6 +37,13 @@ install_and_start_v2ray() {
     systemctl start v2ray
 }
 
+config_network() {
+    . /templates.resolved/configuration.ini
+    netplan set ethernets.eth1.dhcp4=false
+    netplan set ethernets.eth1.gateway4=${ROUTER_IP}
+    netplan apply
+}
+
 # Enable IP forwarding on the gateway device
 enable_ip_forwading() {
     local enabled=`cat /etc/sysctl.conf | grep "net.ipv4.ip_forward=1" | grep -v "#" | wc -l`
@@ -86,16 +93,17 @@ prepare_resources
 
 install_and_start_v2ray
 
+config_network
+
 enable_ip_forwading
 
-config_ip_rules
+# config_ip_rules
 
-config_transparent_service() {
+# config_transparent_service() {
 
-    config_iptable_autostart
-}
+#     config_iptable_autostart
+# }
 
 # config_transparent_service
 
 # update root password
-echo -e "password\npassword" | passwd
