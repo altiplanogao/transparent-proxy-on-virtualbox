@@ -156,23 +156,23 @@ main() {
     if [[ "$REMOVE" -eq '1' ]]; then
         echo "RUN: destroy old vm (if exists)"
         vagrant destroy -f
-        exi $?
+        exit $?
     fi
     if [[ "$INSTALL" -eq '1' ]]; then
         restart
-        exi $?
+        exit $?
     fi
     if [[ "$CLEAN" -eq '1' ]]; then
         clean_vms
-        exi $?
+        exit $?
     fi
     if [[ "$UP" -eq '1' ]]; then
         vagrant up
-        exi $?
+        exit $?
     fi
     if [[ "$DOWN" -eq '1' ]]; then
         vagrant halt
-        exi $?
+        exit $?
     fi
 }
 
