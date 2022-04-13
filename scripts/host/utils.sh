@@ -33,7 +33,7 @@ expand_user_config() {
 
 
     echo "EXPAND SETTING using \"${PROXY_IP}\""
-    VM_NAME="v2ray-proxy-"${PROXY_IP//./-}
+    VM_NAME="v2ray-proxy-${PROXY_IP//./-}-${PROXY_MODE}"
     echo "VM_NAME: \"${VM_NAME}\""
 }
 
@@ -128,27 +128,11 @@ fill_templates() {
     done
 }
 
-rough_subnet_mask_compare() {
-    local a=$1
-    local b=$2
-    
-    local i=1
-    while [ $i -le 4 ]
-    do
-        local ai=`echo $a | cut -d'.' -f${i}`
-        local bi=`echo $b | cut -d'.' -f${i}`
-        if (( ${ai}!=${bi} )); then
-            return $(( $i - 1 ))
-        fi
-
-        i=$(($i+1))
-    done
-}
-
 prepare_vagrant_params() {
     echo "Prepare vagrant required parameters"
     local bridge_names=(`VBoxManage list bridgedifs | grep Name | grep -v VBoxNetworkName | sed "s|Name:||g" | sed "s/^[[:space:]]*//g"`)
     local bridge_ips=(`VBoxManage list bridgedifs | grep IPAddress | sed "s|IPAddress:||g" | sed "s/^[[:space:]]*//g"`)
+    local bridge_netmasks=(`VBoxManage list bridgedifs | grep NetworkMask | sed "s|NetworkMask:||g" | sed "s/^[[:space:]]*//g"`)
     local bridge_wireless_s=(`VBoxManage list bridgedifs | grep Wireless | sed "s|Wireless:||g" | sed "s/^[[:space:]]*//g"`)
     
     local bridge_count=${#bridge_names[@]}
@@ -162,23 +146,21 @@ prepare_vagrant_params() {
     BRIDGE_IP=""
 
     local i=0
-    local best_hits=0
-    while [ $i -lt ${bridge_count} ]
-    do
+    echo "  start checking, expected bridge LAN_NETWORK: \"${LAN_NETWORK}\""
+    while [[ $i -lt ${bridge_count} ]]; do
         # PROXY_IP/ROUTER_IP/BRIDGE_IP should in same subnet
         bridge_name=${bridge_names[$i]}
         bridge_ip=${bridge_ips[$i]}
+        bridge_netmask=${bridge_netmasks[$i]}
         bridge_wireless=${bridge_wireless_s[$i]}
 
-        rough_subnet_mask_compare ${ROUTER_IP} ${bridge_ip}
-        hits=$?
-        if (( ${hits} <= 4 && ${hits} > ${best_hits} )); then
-            best_hits=${hits}
-            BRIDGE_NAME=${bridge_name}
-            BRIDGE_IP=${bridge_ip}
+        network_line=`ipcalc -n -b ${bridge_ip}/${bridge_netmask} | grep Network: | sed "s|Network:||g" | sed "s/^[[:space:]]*//g"`
+        local network=`trim ${network_line}`
+        echo "  checking bridge #$i: name: ${bridge_name}, ip: ${bridge_ip}/${bridge_netmask}, network: \"${network}\", wireless: ${bridge_wireless}"
+        if [ "${network}" = "${LAN_NETWORK}" ] ; then
+             BRIDGE_NAME=${bridge_name}
+             BRIDGE_IP=${bridge_ip}
         fi
-
-        echo "  checking bridge #$i: name: ${bridge_name}, ip: ${bridge_ip}, wireless:${bridge_wireless}, hits: ${hits}"
         i=$(($i+1))
     done
 
@@ -197,5 +179,6 @@ vagrant_env_prepare() {
     export LAN_NETMASK_EXPAND
     export ROUTER_IP
     export VM_NAME
+    export PROXY_MODE
 }
 

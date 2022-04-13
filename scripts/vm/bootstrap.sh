@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 
+. /templates.resolved/configuration.ini
 # options: simple,redirect,tproxy.(only simple tested)
-proxy_mode="simple"
+proxy_mode=${PROXY_MODE}
 
 iptables_rules_file="/etc/iptables/rules.v4"
 
@@ -38,7 +39,6 @@ install_and_start_v2ray() {
 }
 
 config_network() {
-    . /templates.resolved/configuration.ini
     netplan set ethernets.eth1.dhcp4=false
     netplan set ethernets.eth1.gateway4=${ROUTER_IP}
     netplan apply
@@ -106,4 +106,5 @@ enable_ip_forwading
 
 # config_transparent_service
 
-# update root password
+# # update root password
+# echo -e "password\npassword" | passwd

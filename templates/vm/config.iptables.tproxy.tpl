@@ -3,6 +3,8 @@
 iptables -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
 iptables -A OUTPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
 
+# https://guide.v2fly.org/app/tproxy.html
+
 # 设置策略路由
 ip rule add fwmark 1 table 100
 ip route add local 0.0.0.0/0 dev lo table 100
