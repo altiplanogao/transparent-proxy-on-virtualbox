@@ -1,15 +1,15 @@
 #!/usr/bin/env bash
 
-. /templates.resolved/configuration.ini
-# options: simple,redirect,tproxy.(only simple tested)
-proxy_mode=${PROXY_MODE}
-
 iptables_rules_file="/etc/iptables/rules.v4"
 
 prepare_resources() {
     echo "[apply]: prepare resources"
     mv /home/vagrant/vm_templates.resolved /templates.resolved
     mv /home/vagrant/package /resources
+
+    . /templates.resolved/configuration.ini
+    # options: simple,redirect,tproxy.(only simple tested)
+    proxy_mode=${PROXY_MODE}
 }
 
 update_resolved_conf() {
@@ -30,7 +30,7 @@ install_and_start_v2ray() {
 
     # use config file
     echo "apply prepared v2ray config"
-    cp /templates.resolved/v2ray.config.client.${proxy_mode} /usr/local/etc/v2ray/config.json
+    cp "/templates.resolved/v2ray.config.client.${proxy_mode}" /usr/local/etc/v2ray/config.json
 
     # enable service
     echo "enable v2ray service"
@@ -63,7 +63,7 @@ enable_ip_forwading() {
 
 config_ip_rules() {
     echo "config ip rules start"
-    . /templates.resolved/config.iptables.${proxy_mode}
+    . "/templates.resolved/config.iptables.${proxy_mode}"
     echo "config ip rules done, will store rules to: ${iptables_rules_file}"
     mkdir -p /etc/iptables && iptables-save > ${iptables_rules_file}
     echo "Print ${iptables_rules_file}"

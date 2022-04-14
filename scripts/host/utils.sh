@@ -124,6 +124,9 @@ fill_templates() {
         sed -i "s|%LAN_NETMASK%|${LAN_NETMASK}|g" ${fn}
         sed -i "s|%LAN_NETMASK_EXPAND%|${LAN_NETMASK_EXPAND}|g" ${fn}
 
+        sed -i "s|%VM_NAME%|${VM_NAME}|g" ${fn}
+        sed -i "s|%PROXY_MODE%|${PROXY_MODE}|g" ${fn}
+
         mv $fn $newfn
     done
 }

@@ -137,6 +137,7 @@ show_help() {
 
 clean_vms() {
 # vboxmanage list vms
+# vboxmanage controlvm v2ray-proxy-**** poweroff
 # vboxmanage unregistervm v2ray-proxy-**** --delete
     echo "TODO: clean_vms"
 }
