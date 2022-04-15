@@ -7,6 +7,7 @@ echo "BASEDIR @: \"${BASEDIR}\""
 fi
 
 . ${BASEDIR}/scripts/common.sh
+. ${BASEDIR}/scripts/host/utils.sh
 
 main() {
     expand_config

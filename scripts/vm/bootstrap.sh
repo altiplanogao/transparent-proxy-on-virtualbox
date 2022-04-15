@@ -2,6 +2,10 @@
 
 iptables_rules_file="/etc/iptables/rules.v4"
 
+echo "==================================="
+env
+echo "==================================="
+
 prepare_resources() {
     echo "[apply]: prepare resources"
     mv /home/vagrant/vm_templates.resolved /templates.resolved
@@ -81,13 +85,15 @@ config_iptable_autostart() {
     systemctl daemon-reload
     echo "systemctl enable tproxyrule"
     systemctl enable tproxyrule
-    service tproxyrule status
-    echo "systemctl start tproxyrule"
-    systemctl start tproxyrule
-    service tproxyrule status
+    # service tproxyrule status
+    # echo "systemctl start tproxyrule"
+    # systemctl start tproxyrule
+    # service tproxyrule status
 }
 
 prepare_resources
+
+apt install net-tools nftables -y
 
 # update_resolved_conf
 
@@ -96,15 +102,8 @@ install_and_start_v2ray
 config_network
 
 enable_ip_forwading
-
-# config_ip_rules
-
-# config_transparent_service() {
-
-#     config_iptable_autostart
-# }
-
-# config_transparent_service
-
 # # update root password
 # echo -e "password\npassword" | passwd
+
+config_ip_rules
+config_iptable_autostart
