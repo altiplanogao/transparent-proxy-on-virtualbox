@@ -55,6 +55,18 @@ Typical method: on your router's config page, update the gateway address under d
 $ #### Do the right thing to your router. ####
 ```
 
+FYI: Sometimes, your router doesn't provide a method to set default gateway for clients.
+Here is my condition & solution:
+* My **Netgear Router** supports DHCP, but doesn't provide default gateway setting.
+* I have a Raspberry board.
+* So, I install **OpenWrt** on the **Raspberry**, and set it up as an AP device (2 steps):
+  1. [OpenWrt as client device](https://openwrt.org/docs/guide-user/network/openwrt_as_clientdevice)
+  1. [Enabling a Wi-Fi access point on OpenWrt](https://openwrt.org/docs/guide-quick-start/basic_wifi)
+* Connect **Raspberry OpenWrt** to **Netgear Router**'s LAN port, and config static IP(192.168.1.100) 
+* Start 2 DHCP servers on the same LAN with different IP range (IMPORTANT: DO NOT OVERLAP, TO AVOID CONFLICT).
+  1. Start DHCP server on **Netgear Router** with range [192.168.1.2, 192.168.1.253]
+  2. Start DHCP server on **Raspberry OpenWrt** with range [192.168.2.1, 192.168.2.254]
+
 ## Step 4, Aha ...
 Connect any device to the router without any proxy setting. Enjoy ... 
 
