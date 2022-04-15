@@ -146,6 +146,13 @@ main() {
     judgment_parameters "$@"
     [[ "$HELP" -eq '1' ]] && show_help
 
+    local conf_file=$BASEDIR/config.ini
+    if [[ ! -f ${conf_file} ]];then
+        echo "${conf_file} missing, please follow \"README.md\" instructions."
+        return 0
+    fi
+
+
     . $BASEDIR/scripts/host/utils.sh
     . $BASEDIR/scripts/common.sh
 

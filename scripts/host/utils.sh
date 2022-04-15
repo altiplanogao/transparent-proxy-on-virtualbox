@@ -38,7 +38,6 @@ expand_user_config() {
 }
 
 expand_config() {
-    . $BASEDIR/config_v2ray.sh
     . $BASEDIR/config.ini
     expand_user_config
 

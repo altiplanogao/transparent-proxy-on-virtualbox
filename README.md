@@ -5,6 +5,8 @@ Create a transparent proxy vm using virtualbox.
 
 ## Step 1, Install software dependencies
 
+On your home server, install following:
+
 * virtualbox
 * vagrant
 * ipcalc
@@ -19,8 +21,6 @@ $ cd transparent-proxy-on-virtualbox
 $ # Create config file
 $ cp config.ini.template config.ini
 $ vi config.ini
-$ # Update arch or v2ray version if necessary
-$ vi config_v2ray.sh
 $ # Run setup.sh script (Note: If an automatic restart is required, then you will be asked to enter the sudo password. That is to say, you needs to be in the sudoer list.)
 $ ./setup.sh
 ```
@@ -47,7 +47,9 @@ $ tree
 ```
 
 ## Step 3, Config your home router
+
 Make the router's clients to use the vm as their default gateway.
+
 Typical method: on your router's config page, update the gateway address under dhcp setting. Update it using the vm's ip. (see config.ini -> $PROXY_IP)
 ```
 $ #### Do the right thing to your router. ####

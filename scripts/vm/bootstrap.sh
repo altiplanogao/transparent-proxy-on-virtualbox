@@ -12,7 +12,7 @@ prepare_resources() {
     mv /home/vagrant/package /resources
 
     . /templates.resolved/configuration.ini
-    # options: simple,redirect,tproxy.(only simple tested)
+    # options: simple,tproxy.(only simple tested)
     proxy_mode=${PROXY_MODE}
 }
 
