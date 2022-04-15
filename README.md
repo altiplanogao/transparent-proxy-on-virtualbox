@@ -12,6 +12,7 @@
 
 在你的家庭服务器上，安装以下软件:
 
+* git
 * virtualbox
 * vagrant
 * ipcalc
