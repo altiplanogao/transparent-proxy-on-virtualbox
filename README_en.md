@@ -62,7 +62,8 @@ Here is my condition & solution:
 * So, I install **OpenWrt** on the **Raspberry**, and set it up as an AP device (2 steps):
   1. [OpenWrt as client device](https://openwrt.org/docs/guide-user/network/openwrt_as_clientdevice)
   1. [Enabling a Wi-Fi access point on OpenWrt](https://openwrt.org/docs/guide-quick-start/basic_wifi)
-* Connect **Raspberry OpenWrt** to **Netgear Router**'s LAN port, and config static IP(192.168.1.100) 
+  * Note: Normally, when the router is an AP, DHCP is turned off, but we will not do this. 
+* Connect **Raspberry OpenWrt** to **Netgear Router**'s LAN port, and config static IP(192.168.1.100), set IPv4 gateway(192.168.1.254) (please refer to $PROXY_IP in config.ini for real value)
 * Start 2 DHCP servers on the same LAN with different IP range (IMPORTANT: DO NOT OVERLAP, TO AVOID CONFLICT).
   1. Start DHCP server on **Netgear Router** with range [192.168.1.2, 192.168.1.253]
   2. Start DHCP server on **Raspberry OpenWrt** with range [192.168.2.1, 192.168.2.254]
