@@ -78,7 +78,7 @@
   }],
   "routing": {
     "domainStrategy": "IPOnDemand",
-    "rules":[
+    "rules": [
       {
         "type": "field",
         "inboundTag": [
@@ -87,12 +87,17 @@
         "port": 53,
         "network": "udp",
         "outboundTag": "dns-out" 
-      },
+      },    
       {
         "type": "field",
-        "domain": ["geosite:cn"],
-        "outboundTag": "direct"
-      },{
+        "inboundTag": [
+          "transparent"
+        ],
+        "port": 123,
+        "network": "udp",
+        "outboundTag": "direct" 
+      },    
+      {
         "type": "field", 
         "ip": [ 
           "223.5.5.5",
@@ -110,16 +115,23 @@
       },
       {
         "type": "field",
+        "protocol":["bittorrent"], 
+        "outboundTag": "direct"
+      },
+      {
+        "type": "field", 
         "ip": [
-          "geoip:cn",
-          "geoip:private"
+          "geoip:private",
+          "geoip:cn"
         ],
         "outboundTag": "direct"
       },
       {
-        "type": "field",
-        "network": "udp,tcp",
-        "outboundTag": "proxy"
+        "type": "field", 
+        "domain": [
+          "geosite:cn"
+        ],
+        "outboundTag": "direct"
       }
     ]
   },
@@ -131,14 +143,34 @@
       "domain:wikipedia.org": "www.wikimedia.org",
       "domain:shadowsocks.org": "electronicsrealm.com"
     },
-    "servers": [
-      "8.8.8.8",
-      "1.1.1.1",
+    "servers": [{
+        "address": "223.5.5.5",
+        "port": 53,
+        "domains": [
+          "geosite:cn",
+          "ntp.org"
+        ]
+      },
       {
         "address": "114.114.114.114",
         "port": 53,
         "domains": [
-          "geosite:cn"
+          "geosite:cn",
+          "ntp.org"
+        ]
+      },
+      {
+        "address": "8.8.8.8",
+        "port": 53,
+        "domains": [
+          "geosite:geolocation-!cn"
+        ]
+      },
+      {
+        "address": "1.1.1.1",
+        "port": 53,
+        "domains": [
+          "geosite:geolocation-!cn"
         ]
       },
       "localhost"
