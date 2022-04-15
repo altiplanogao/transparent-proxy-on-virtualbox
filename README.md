@@ -4,6 +4,10 @@
 
 <!-- https://guide.v2fly.org/en_US/app/transparent_proxy.html#pros -->
 
+## 步骤 0, 安装服务器端
+
+假设你已经完成了v2ray服务器端。
+
 ## 步骤 1, 安装依赖软件
 
 在你的家庭服务器上，安装以下软件:
