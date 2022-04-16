@@ -166,7 +166,7 @@ prepare_vagrant_params() {
         i=$(($i+1))
     done
 
-    if [ ${BRIDGE_NAME} = "" ] ; then
+    if [ "${BRIDGE_NAME}" = "" ] ; then
         echo "No suitable bridge found."
         exit 1
     fi
