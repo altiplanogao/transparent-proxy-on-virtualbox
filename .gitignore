@@ -1,9 +1,11 @@
 .vagrant/
 
 package/*.zip
+package/*.dgst
+package/*.deb
 package/fhs-install-v2ray/
 
-vm_templates.resolved/
+vm.resources.suite/
 
 config.ini
 

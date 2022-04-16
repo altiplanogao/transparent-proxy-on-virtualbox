@@ -14,7 +14,7 @@ SERVER_PORT=12345
 SERVER_USER_ID="00000000-0000-0000-0000-000000000000"
 
 # (lan) router's address
-ROUTER_ADDRESS="192.168.1.1/24"
+ROUTER_IP_MASKED="192.168.1.1/24"
 
 # (lan) proxy vm
 # PROXY_IP is the expected ip address for the vm (it shouldn't be used by any other device in the lan)

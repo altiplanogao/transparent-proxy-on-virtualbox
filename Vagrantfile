@@ -45,9 +45,22 @@ Vagrant.configure("2") do |config|
     # copy private key so hosts can ssh using key authentication (the script below sets permissions to 600)
     node.vm.provision "file", source: "~/.ssh/authorized_keys", destination: ".ssh/authorized_keys"
     node.vm.provision "file", source: "~/.ssh/id_rsa.pub", destination: "host_id_rsa.pub"
-    node.vm.provision "file", source: "package", destination: "$HOME/"
-    node.vm.provision "file", source: "vm_templates.resolved", destination: "$HOME/"
-    node.vm.provision "shell", path: "scripts/vm/bootstrap.sh"
+    node.vm.provision "file", source: "vm.resources.suite", destination: "$HOME/resources"
+
+    $script = "
+    netplan set ethernets.eth1.dhcp4=false
+    netplan set ethernets.eth1.gateway4=%s
+    netplan apply" % $router_ip
+    # $script = <<-'SCRIPT'
+    # netplan set ethernets.eth1.dhcp4=false
+    # netplan set ethernets.eth1.gateway4=${router_ip}
+    # netplan apply
+    # SCRIPT
+    puts "will execute shell: %s" % $script
+    node.vm.provision "shell", inline: $script
+
+    # node.vm.provision "shell", path: "scripts/vm/system_initialize.sh"
+    node.vm.provision "shell", path: "scripts/vm/bootstrap_entry.sh"
     node.vm.provision "shell", path: "scripts/vm/login_enable_key.sh", privileged: false
     node.vm.provision "shell", path: "scripts/vm/login_disable_password.sh"
   end

@@ -2,6 +2,14 @@
 set -o errexit
 
 BASEDIR=$(dirname "$0")
+PKG_DIR="package"
+
+vm_prefix="v2ray2"
+
+. $BASEDIR/scripts/host/download.sh
+. $BASEDIR/scripts/common.sh
+. $BASEDIR/scripts/host/handle_resource.sh
+. $BASEDIR/scripts/host/vbox_utils.sh
 
 should_run_as_normal_user() {
     username=`id -u -n`
@@ -17,6 +25,18 @@ should_run_as_normal_user() {
     fi
 }
 
+vagrant_env_prepare() {
+    VM_NAME="${vm_prefix}-${PROXY_IP//./-}-${PROXY_MODE}"
+
+    PROXY_IP=${PROXY_IP}
+    export PROXY_IP
+    export BRIDGE_NAME
+    export LAN_NETMASK_EXPAND
+    export ROUTER_IP
+    export VM_NAME
+    export PROXY_MODE
+}
+
 do_install_vm() {
     pushd $BASEDIR
 
@@ -26,7 +46,6 @@ do_install_vm() {
         echo "RUN: setup vm"
         download_v2ray
         download_fhs_install_v2ray
-        fill_templates
 
         vagrant up
     popd
@@ -41,7 +60,7 @@ do_setup_autostart() {
     popd
 
     echo "RUN: make vm auto start on host"
-    sudo -E $BASEDIR/scripts/host/make_vm_auto_start.sh
+    sudo -E $BASEDIR/scripts/host/make_vm_autostart.sh
 
     pushd $BASEDIR
         echo "RUN: start vm"
@@ -152,13 +171,18 @@ main() {
         return 0
     fi
 
-
-    . $BASEDIR/scripts/host/utils.sh
-    . $BASEDIR/scripts/common.sh
-
     should_run_as_normal_user
-    expand_config
-    prepare_vagrant_params
+    chmod +x . $BASEDIR/vm.resources/scripts/*.sh
+
+    . $BASEDIR/config.ini
+
+    download_v2ray
+    download_fhs_install_v2ray
+
+    expand_net_vars
+    prepare_resources_suite
+
+    auto_select_bridge_name_and_ip
     vagrant_env_prepare
 
     if [[ "$REMOVE" -eq '1' ]]; then
