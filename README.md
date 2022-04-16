@@ -66,8 +66,6 @@ $ #### Do the right thing to your router. ####
 ## 步骤 4, 完成 ...
 将你的智能设备（电脑、手机、Pad……）连到你的路由器。
 
-供参考：如果在上面 **树莓派 OpenWrt** 那种情况下，我们则需要连到 **树莓派 OpenWrt** 所开放的热点上。
-
 ---
 
 # transparent-proxy-on-virtualbox
