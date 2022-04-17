@@ -98,9 +98,11 @@ ask_and_do_setup_autostart() {
 }
 
 install_local() {
+    print_block_header "INSTALL LOCAL START"
     sudo cp -rf $BASEDIR/vm.resources.suite /resources
     cd /resources
     sudo /resources/bootstrap.sh
+    print_block_header "INSTALL LOCAL DONE"
 }
 
 reinstall_vm() {
@@ -214,6 +216,7 @@ main() {
     download_fhs_install_v2ray
 
     expand_net_vars
+
     if [[ "$INSTALL_LOCAL" -eq '1' ]]; then
         install_local
         exit $?
