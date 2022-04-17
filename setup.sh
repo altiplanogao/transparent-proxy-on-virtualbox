@@ -220,11 +220,6 @@ main() {
 
     expand_net_vars
 
-    if [[ "$INSTALL_LOCAL" -eq '1' ]]; then
-        install_local
-        exit $?
-    fi
-
     if [[ "$CLEAN" -eq '1' ]]; then
         clean_vms
         exit $?
@@ -233,6 +228,11 @@ main() {
     prepare_resources_suite
     if [[ "$GEN" -eq '1' ]]; then
         exit 0
+    fi
+
+    if [[ "$INSTALL_LOCAL" -eq '1' ]]; then
+        install_local
+        exit $?
     fi
 
     auto_select_bridge_name_and_ip
