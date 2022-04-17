@@ -5,6 +5,8 @@ install_and_start_v2ray() {
     local bin=${WD}/package/${V2RAY_RELEASE_FILE}
     local installer=${WD}/package/${V2RAY_INSTALLER}
     chmod +x ${installer}/*.sh
+    
+    echo "Command: ${installer}/install-release.sh -l ${bin}"
     echo '' | ${installer}/install-release.sh -l ${bin}
 
     # use config file
