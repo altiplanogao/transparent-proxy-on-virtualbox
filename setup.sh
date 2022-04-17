@@ -33,6 +33,68 @@ check_required_softwares() {
     fi
 }
 
+identify_the_operating_system_and_architecture() {
+  if [[ "$(uname)" == 'Linux' ]]; then
+    case "$(uname -m)" in
+      'i386' | 'i686')
+        MACHINE='32'
+        ;;
+      'amd64' | 'x86_64')
+        MACHINE='64'
+        ;;
+      'armv5tel')
+        MACHINE='arm32-v5'
+        ;;
+      'armv6l')
+        MACHINE='arm32-v6'
+        grep Features /proc/cpuinfo | grep -qw 'vfp' || MACHINE='arm32-v5'
+        ;;
+      'armv7' | 'armv7l')
+        MACHINE='arm32-v7a'
+        grep Features /proc/cpuinfo | grep -qw 'vfp' || MACHINE='arm32-v5'
+        ;;
+      'armv8' | 'aarch64')
+        MACHINE='arm64-v8a'
+        ;;
+      'mips')
+        MACHINE='mips32'
+        ;;
+      'mipsle')
+        MACHINE='mips32le'
+        ;;
+      'mips64')
+        MACHINE='mips64'
+        ;;
+      'mips64le')
+        MACHINE='mips64le'
+        ;;
+      'ppc64')
+        MACHINE='ppc64'
+        ;;
+      'ppc64le')
+        MACHINE='ppc64le'
+        ;;
+      'riscv64')
+        MACHINE='riscv64'
+        ;;
+      's390x')
+        MACHINE='s390x'
+        ;;
+      *)
+        echo "error: The architecture is not supported."
+        exit 1
+        ;;
+    esac
+    if [[ ! -f '/etc/os-release' ]]; then
+      echo "error: Don't use outdated Linux distributions."
+      exit 1
+    fi
+  else
+    echo "error: This operating system is not supported."
+    exit 1
+  fi
+}
+
 vagrant_env_prepare() {
     VM_NAME="${vm_prefix}-${PROXY_IP//./-}-${PROXY_MODE}"
 
@@ -207,6 +269,9 @@ main() {
         return 0
     fi
 
+    identify_the_operating_system_and_architecture
+    export MACHINE
+    
     check_required_softwares
 
     should_run_as_normal_user
