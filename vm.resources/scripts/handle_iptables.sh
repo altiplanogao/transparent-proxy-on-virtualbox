@@ -1,13 +1,11 @@
 
 config_ip_rules() {
-    echo "config ip rules start"
+    print_block_header "CONFIG IP RULE START"
     export PROXY_TRANSP_PORT
     ${WD}/scripts/config.iptables.${PROXY_MODE}.sh
     echo "config ip rules done, will store rules to: ${iptables_rules_file}"
     mkdir -p /etc/iptables && iptables-save > ${iptables_rules_file}
-    echo "Print ${iptables_rules_file}"
-    cat ${iptables_rules_file}
-    echo "Config ip rules finished"
+    print_block_footer "CONFIG IP RULE DONE"
 }
 
 config_iptable_autostart() {

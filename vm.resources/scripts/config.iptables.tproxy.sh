@@ -15,7 +15,7 @@ iptables -A OUTPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
 # 设置策略路由
 echo "define route strategy"
 ip rule add fwmark 1 table 100
-ip route add local 0.0.0.0/0 dev lo table 100
+ip route add local 0.0.0.0/0 dev lo table 100 || true
 
 # iptables -t mangle -N V2SKIP
 # iptables -t mangle -A V2SKIP -d 127.0.0.1/32 -j RETURN
