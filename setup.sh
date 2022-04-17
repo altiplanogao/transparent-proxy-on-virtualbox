@@ -120,6 +120,10 @@ judgment_parameters() {
         CLEAN='1'
         break
         ;;
+      '-g' | '--gen')
+        GEN='1'
+        break
+        ;;
       '-u' | '--up')
         UP='1'
         break
@@ -146,6 +150,7 @@ show_help() {
   echo "usage: $0 [--remove | --install | -c | -u | -d | -h]"
   echo '  --remove        Remove installed vm'
   echo '  --install       Installed proxy vm (the default action)'
+  echo '  -g, --gen       Generate script suite'
   echo '  -c, --clean     Remove all installed vm'
   echo '  -u, --up        Start the vm'
   echo '  -d, --down      Stop the vm'
@@ -155,10 +160,15 @@ show_help() {
 }
 
 clean_vms() {
-# vboxmanage list vms
-# vboxmanage controlvm v2ray-proxy-**** poweroff
-# vboxmanage unregistervm v2ray-proxy-**** --delete
-    echo "TODO: clean_vms"
+    echo "Clean vms start"
+    local vmnames=(`vboxmanage list vms | awk '{print $1}' | sed "s/^[[:space:]]*//g" | sed "s/[[:space:]]*$//g"`)
+    for vm in "${vmnames[@]}"
+    do
+        echo "  kill and remove: $vm"
+        vboxmanage controlvm $vm poweroff
+        vboxmanage unregistervm $vm --delete
+    done
+    echo "Clean vms done"
 }
 
 main() {
@@ -180,7 +190,16 @@ main() {
     download_fhs_install_v2ray
 
     expand_net_vars
+
+    if [[ "$CLEAN" -eq '1' ]]; then
+        clean_vms
+        exit $?
+    fi
+
     prepare_resources_suite
+    if [[ "$GEN" -eq '1' ]]; then
+        exit 0
+    fi
 
     auto_select_bridge_name_and_ip
     vagrant_env_prepare
@@ -192,10 +211,6 @@ main() {
     fi
     if [[ "$INSTALL" -eq '1' ]]; then
         restart
-        exit $?
-    fi
-    if [[ "$CLEAN" -eq '1' ]]; then
-        clean_vms
         exit $?
     fi
     if [[ "$UP" -eq '1' ]]; then

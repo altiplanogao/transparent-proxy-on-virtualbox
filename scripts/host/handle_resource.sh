@@ -6,10 +6,11 @@ if [ -z ${BASEDIR} ];then
 fi
 
 prepare_resources_suite() {
+    print_block_header "PREPARE RESOURCE SUITE"
+
     vm_res_dir="${BASEDIR}/vm.resources"
     vm_res_suite_dir="${BASEDIR}/vm.resources.suite"
 
-    echo "Prepare vm resources"
     rm -rf ${vm_res_suite_dir}
     cp -r ${vm_res_dir} ${vm_res_suite_dir}
 
@@ -39,4 +40,7 @@ V2RAY_INSTALLER="${V2RAY_INSTALLER}"
 V2RAY_RELEASE_FILE="${V2RAY_RELEASE_FILE}"
 
 EOL
+    local vm_res_suite_dir=`readlink -f "${vm_res_suite_dir}"`
+    
+    print_block_footer "RESOURCE SUITE PREPARED at: ${vm_res_suite_dir}"
 }
