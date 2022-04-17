@@ -1,6 +1,10 @@
-Example of running v2ray container:
+# Setup transparent proxy on debian based system
+```shell
+$ vi config.sh
+$ sudo ./bootstrap.sh
+```
 
-
+# Example of running v2ray container:
 ```shell
 $ # prepare config file
 $ cp ./v2ray.config.server /localpath/config.json

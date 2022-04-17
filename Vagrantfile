@@ -40,6 +40,9 @@ Vagrant.configure("2") do |config|
       v.memory = $vm_memory
       v.customize ["modifyvm", :id, "--vram", "8"] # ubuntu defaults to 256 MB which is a waste of precious RAM
       v.customize ["modifyvm", :id, "--audio", "none"]
+      # https://coderwall.com/p/n2y79g/vagrant-virtualbox-ubuntu-no-internet-access
+      v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+      v.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
     end
 
     # copy private key so hosts can ssh using key authentication (the script below sets permissions to 600)
@@ -51,11 +54,6 @@ Vagrant.configure("2") do |config|
     netplan set ethernets.eth1.dhcp4=false
     netplan set ethernets.eth1.gateway4=%s
     netplan apply" % $router_ip
-    # $script = <<-'SCRIPT'
-    # netplan set ethernets.eth1.dhcp4=false
-    # netplan set ethernets.eth1.gateway4=${router_ip}
-    # netplan apply
-    # SCRIPT
     puts "will execute shell: %s" % $script
     node.vm.provision "shell", inline: $script
 
