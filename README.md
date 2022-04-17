@@ -1,6 +1,6 @@
 # transparent-proxy-on-virtualbox
 
-用VirtualBox创建一个 v2ray 透明代理虚拟机
+创建一个 v2ray 透明代理虚拟机 (VirtualBox)
 
 <!-- https://guide.v2fly.org/en_US/app/transparent_proxy.html#pros -->
 
@@ -13,9 +13,9 @@
 在你的家庭服务器上，安装以下软件:
 
 * git
+* ipcalc
 * virtualbox
 * vagrant
-* ipcalc
 
 ## 步骤 2, 下载这个代码仓，配置并运行
 

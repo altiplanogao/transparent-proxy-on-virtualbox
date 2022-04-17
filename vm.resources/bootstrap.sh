@@ -47,7 +47,7 @@ install_dependency_tools() {
         cp ${from} /etc/apt/sources.list
     fi
     apt update
-    apt install net-tools nftables ipcalc -y
+    apt install net-tools ipcalc -y
 }
 
 install_pkgs

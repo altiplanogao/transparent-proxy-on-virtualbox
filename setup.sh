@@ -99,10 +99,12 @@ ask_and_do_setup_autostart() {
 
 install_local() {
     print_block_header "INSTALL LOCAL START"
-    sudo cp -rf $BASEDIR/vm.resources.suite /resources
-    cd /resources
-    sudo bash /resources/bootstrap.sh
-    print_block_header "INSTALL LOCAL DONE"
+    sudo rm -rf /resources
+    sudo mv $BASEDIR/vm.resources.suite /resources
+    pushd /resources
+        sudo bash /resources/bootstrap.sh
+    popd
+    print_block_footer "INSTALL LOCAL DONE"
 }
 
 reinstall_vm() {
