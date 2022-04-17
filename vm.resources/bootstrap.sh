@@ -29,7 +29,7 @@ check_network() {
     for ip in "${inet_ips[@]}"
     do
         local subnet=`ipcalc -nb $ip | grep Network: | sed "s|Network:||g" | sed "s/^[[:space:]]*//g" | sed "s/[[:space:]]*$//g"`
-        echo "  checking... ${ip} belongs to ${LAN_NETWORK}"
+        echo "  checking... ${ip} belongs to ${subnet}"
         if [[ "${LAN_NETWORK}" = "${subnet}" ]]; then
             echo "[SUCCESS]"
             return
