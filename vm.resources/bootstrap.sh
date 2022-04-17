@@ -22,12 +22,13 @@ TPL_RESOLVED_DIR=${WD}/templates.resolved
 
 
 check_network() {
-    echo "Check network setting. At least one ip should belong to network: ${LAN_NETWORK}"
+    echo "Check network setting. Selected router: ${ROUTER_IP_MASKED}. At least one ip should belong to network: ${LAN_NETWORK}"
 
     # get all subnets
     local inet_ips=(`ip addr | grep 'state UP' -A2 | grep inet | grep -v inet6 | awk '{print $2}'`)
     for ip in "${inet_ips[@]}"
     do
+        echo "  checking: ${ip}"
         local subnet=`ipcalc -nb $ip | grep Network: | sed "s|Network:||g" | sed "s/^[[:space:]]*//g" | sed "s/[[:space:]]*$//g"`
         if [[ "${LAN_NETWORK}" = "${subnet}" ]]; then
             echo "[SUCCESS] ${ip} belongs to network \"${LAN_NETWORK}\", "
