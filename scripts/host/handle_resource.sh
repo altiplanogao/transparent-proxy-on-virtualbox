@@ -24,8 +24,12 @@ prepare_resources_suite() {
     cp ${BASEDIR}/scripts/common.sh "${vm_res_suite_dir}/scripts"
 
     echo "  copy ssh setting"
-    cp ~/.ssh/id_rsa.pub "${vm_res_suite_dir}/.ssh/"
-    cp ~/.ssh/authorized_keys "${vm_res_suite_dir}/.ssh/"
+    if [[ -f ~/.ssh/id_rsa.pub ]]; then
+        cp ~/.ssh/id_rsa.pub "${vm_res_suite_dir}/.ssh/"
+    fi
+    if [[ -f ~/.ssh/authorized_keys ]]; then
+        cp ~/.ssh/authorized_keys "${vm_res_suite_dir}/.ssh/"
+    fi
 
     echo "  prepare config file"
     local target_config_script="${vm_res_suite_dir}/config.sh"

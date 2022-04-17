@@ -26,10 +26,10 @@ should_run_as_normal_user() {
 }
 
 check_required_softwares() {
-    which ipcalc
-    if [[ "$?" != "0" ]]; then
+    if ! ipcalc -v > /dev/null
+    then
         echo "[ERROR] ipcalc not found, please install it manually."
-        exit 1
+        exit
     fi
 }
 
