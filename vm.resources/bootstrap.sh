@@ -21,6 +21,24 @@ TPL_DIR=${WD}/templates
 TPL_RESOLVED_DIR=${WD}/templates.resolved
 
 
+check_network() {
+    echo "Check network setting. At least one ip should belong to network: ${LAN_NETWORK}"
+
+    # get all subnets
+    local inet_ips=(`ip addr | grep 'state UP' -A2 | grep inet | grep -v inet6 | awk '{print $2}'`)
+    for ip in "${inet_ips[@]}"
+    do
+        local subnet=`ipcalc -nb $ip | grep Network: | sed "s|Network:||g" | sed "s/^[[:space:]]*//g" | sed "s/[[:space:]]*$//g"`
+        if [[ "${LAN_NETWORK}" = "${subnet}" ]]; then
+            echo "[SUCCESS] ${ip} belongs to network \"${LAN_NETWORK}\", "
+            return
+        fi
+    done
+
+    echo "[FATAL] no ip belongs to network \"${LAN_NETWORK}\", please check"
+    exit 1
+}
+
 # Enable IP forwarding on the gateway device
 enable_ip_forwading() {
     local enabled=`cat /etc/sysctl.conf | grep "net.ipv4.ip_forward=1" | grep -v "#" | wc -l`
@@ -54,6 +72,8 @@ install_pkgs
 install_dependency_tools
 
 expand_net_vars
+
+check_network
 
 resolve_templates
 
