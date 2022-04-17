@@ -101,7 +101,7 @@ install_local() {
     print_block_header "INSTALL LOCAL START"
     sudo cp -rf $BASEDIR/vm.resources.suite /resources
     cd /resources
-    sudo /resources/bootstrap.sh
+    sudo bash /resources/bootstrap.sh
     print_block_header "INSTALL LOCAL DONE"
 }
 
@@ -210,7 +210,10 @@ main() {
     should_run_as_normal_user
     chmod +x . $BASEDIR/vm.resources/scripts/*.sh
 
+    print_block_header "USE CONFIG:"
     . $BASEDIR/config.ini
+    cat $BASEDIR/config.ini
+    print_block_footer "CONFIG END"
 
     download_v2ray
     download_fhs_install_v2ray

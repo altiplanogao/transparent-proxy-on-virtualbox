@@ -20,8 +20,9 @@ prepare_resources_suite() {
     popd
     cp -rf "${BASEDIR}/package" "${vm_res_suite_dir}/package"
 
-    echo "  prepare common scripts"
+    echo "  prepare scripts"
     cp ${BASEDIR}/scripts/common.sh "${vm_res_suite_dir}/scripts"
+    chmod +x ${vm_res_suite_dir}/*.sh
 
     echo "  copy ssh setting"
     if [[ -f ~/.ssh/id_rsa.pub ]]; then
