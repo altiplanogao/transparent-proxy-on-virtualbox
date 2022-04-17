@@ -214,6 +214,10 @@ main() {
     download_fhs_install_v2ray
 
     expand_net_vars
+    if [[ "$INSTALL_LOCAL" -eq '1' ]]; then
+        install_local
+        exit $?
+    fi
 
     if [[ "$CLEAN" -eq '1' ]]; then
         clean_vms
@@ -235,10 +239,6 @@ main() {
     fi
     if [[ "$INSTALL_VM" -eq '1' ]]; then
         reinstall_vm
-        exit $?
-    fi
-    if [[ "$INSTALL_LOCAL" -eq '1' ]]; then
-        install_local
         exit $?
     fi
     if [[ "$UP" -eq '1' ]]; then
