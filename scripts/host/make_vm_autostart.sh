@@ -7,7 +7,6 @@ echo "BASEDIR @: \"${BASEDIR}\""
 fi
 
 . ${BASEDIR}/scripts/common.sh
-. ${BASEDIR}/scripts/host/utils.sh
 
 vm_name=${VM_NAME}
 username=${SUDO_USER}
@@ -48,7 +47,9 @@ make_vm_autostart() {
 }
 
 main() {
-    expand_config
+    print_block_header "MAKE VM AUTOSTART"
+    . $BASEDIR/config.ini
+    expand_net_vars
     check_if_running_as_root
     
     chmod +x $BASEDIR/scripts/host/*.sh
@@ -57,6 +58,7 @@ main() {
     prepare_vbox_autostart_cfg
     make_vm_autostart
     echo "Setup gateway proxy: Done"
+    print_block_footer "MAKE VM AUTOSTART DONE"
 }
 
 main "$@"

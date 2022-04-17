@@ -27,7 +27,6 @@ inet_networks=()
 inet_count=${#inet_ips[@]}
 i=0
 while [[ $i -lt ${inet_count} ]]; do
-   # PROXY_IP/ROUTER_IP/BRIDGE_IP should in same subnet
    ip=${inet_ips[$i]}
 
    subnet=`ipcalc -nb $ip | grep Network: | sed "s|Network:||g" | sed "s/^[[:space:]]*//g" | sed "s/[[:space:]]*$//g"`

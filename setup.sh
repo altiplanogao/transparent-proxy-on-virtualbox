@@ -20,8 +20,16 @@ should_run_as_normal_user() {
         exit 1
     fi
 
-    if [[ -f "~/.ssh/id_rsa" ]] ; then
+    if [[ ! -f ~/.ssh/id_rsa ]] ; then
         ssh-keygen -t rsa -f ~/.ssh/id_rsa
+    fi
+}
+
+check_required_softwares() {
+    which ipcalc
+    if [[ "$?" != "0" ]]; then
+        echo "[ERROR] ipcalc not found, please install it manually."
+        exit 1
     fi
 }
 
@@ -89,7 +97,13 @@ ask_and_do_setup_autostart() {
     done
 }
 
-restart() {
+install_local() {
+    sudo cp -rf $BASEDIR/vm.resources.suite /resources
+    cd /resources
+    sudo /resources/bootstrap.sh
+}
+
+reinstall_vm() {
     do_install_vm
     ask_and_do_setup_autostart
 }
@@ -98,7 +112,7 @@ restart() {
 ## Demo function for processing parameters
 judgment_parameters() {
     if [[ "$#" -eq '0' ]]; then
-        INSTALL='1'
+        INSTALL_VM='1'
     fi
   while [[ "$#" -gt '0' ]]; do
     case "$1" in
@@ -109,12 +123,19 @@ judgment_parameters() {
         fi
         REMOVE='1'
         ;;
-      '--install')
+      '-iv' | '--install-vm')
         if [[ "$#" -gt '1' ]]; then
           echo 'error: Please enter the correct parameters.'
           exit 1
         fi
-        INSTALL='1'
+        INSTALL_VM='1'
+        ;;
+      '-il' | '--install-local')
+        if [[ "$#" -gt '1' ]]; then
+          echo 'error: Please enter the correct parameters.'
+          exit 1
+        fi
+        INSTALL_LOCAL='1'
         ;;
       '-c' | '--clean')
         CLEAN='1'
@@ -147,14 +168,15 @@ judgment_parameters() {
 
 # Explanation of parameters in the script
 show_help() {
-  echo "usage: $0 [--remove | --install | -c | -u | -d | -h]"
-  echo '  --remove        Remove installed vm'
-  echo '  --install       Installed proxy vm (the default action)'
-  echo '  -g, --gen       Generate script suite'
-  echo '  -c, --clean     Remove all installed vm'
-  echo '  -u, --up        Start the vm'
-  echo '  -d, --down      Stop the vm'
-  echo '  -h, --help      Show help'
+  echo "usage: $0 [--remove | --install-vm | --install-local | -c | -u | -d | -h]"
+  echo '  --remove                  Remove installed vm'
+  echo '  -iv, --install-vm         Install proxy vm on virtualbox (the default action)'
+  echo '  -il, --install-local      Install proxy on local machine'
+  echo '  -g, --gen                 Generate script suite'
+  echo '  -c, --clean               Remove all installed vm'
+  echo '  -u, --up                  Start the vm'
+  echo '  -d, --down                Stop the vm'
+  echo '  -h, --help                Show help'
   
   exit 0
 }
@@ -180,6 +202,8 @@ main() {
         echo "${conf_file} missing, please follow \"README.md\" instructions."
         return 0
     fi
+
+    check_required_softwares
 
     should_run_as_normal_user
     chmod +x . $BASEDIR/vm.resources/scripts/*.sh
@@ -209,8 +233,12 @@ main() {
         vagrant destroy -f
         exit $?
     fi
-    if [[ "$INSTALL" -eq '1' ]]; then
-        restart
+    if [[ "$INSTALL_VM" -eq '1' ]]; then
+        reinstall_vm
+        exit $?
+    fi
+    if [[ "$INSTALL_LOCAL" -eq '1' ]]; then
+        install_local
         exit $?
     fi
     if [[ "$UP" -eq '1' ]]; then
