@@ -10,10 +10,10 @@ if [ -z ${BASEDIR} ]; then
     echo "BASEDIR @: \"${BASEDIR}\""
 fi
 
-WD="${BASEDIR}"
+WD="${BASEDIR}/.."
+SD=${BASEDIR}
 
 . ${WD}/config.sh
-SD=${WD}/scripts
 . ${SD}/common.sh
 . ${SD}/handle_network.sh
 
