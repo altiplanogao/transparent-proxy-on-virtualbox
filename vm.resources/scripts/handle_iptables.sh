@@ -1,3 +1,4 @@
+iptables_rules_file="/etc/iptables/rules.v4"
 
 config_ip_rules() {
     print_block_header "CONFIG IP RULE START"
