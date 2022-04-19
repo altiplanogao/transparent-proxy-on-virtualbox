@@ -2,8 +2,8 @@
 INSTALL_VERSION="v4.44.0"
 
 # deploy model: simple|tproxy
-#   simple: install proxy at socks5://PROXY_IP:PROXY_PORT (e.g., socks5://127.0.0.1:1080)
-#   tproxy: install socks5 proxy and transparent proxy at PROXY_IP (you should make the vm as default gateway by setting home router device)
+#   simple: install socks5 proxy only. The proxy url would be socks5://PROXY_IP:PROXY_PORT (e.g., socks5://127.0.0.1:1080)
+#   tproxy: install socks5 proxy and transparent proxy at PROXY_IP (you should make the vm as the default gateway by setting your router device, in dhcp section)
 PROXY_MODE="tproxy"
 
 # (wan) v2ray vps's ip, port, user id
@@ -11,11 +11,11 @@ SERVER_IP="123.123.123.123"
 SERVER_PORT=12345
 SERVER_USER_ID="00000000-0000-0000-0000-000000000000"
 
-# (lan) router's address
+# (lan) your router's lan ip with subnet mask
 ROUTER_IP_MASKED="192.168.1.1/24"
 
 # (lan) proxy vm
-# PROXY_IP is the expected ip address for the vm (it shouldn't be used by any other device in the lan)
+# PROXY_IP is the expected ip address for the vm (it shouldn't be assigned to any other device in the lan)
 PROXY_IP="192.168.1.254"
 # PROXY_PORT is the socks proxy port
 PROXY_PORT=1080
