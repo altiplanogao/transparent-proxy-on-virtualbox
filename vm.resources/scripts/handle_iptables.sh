@@ -15,10 +15,12 @@ config_iptable_autostart() {
     # https://toutyrater.github.io/app/tproxy.html
     echo "deploy auto iptables rules service: "
     cp ${WD}/files/tproxyrule.service /etc/systemd/system/tproxyrule.service
+    cp ${WD}/files/ip_change_mon.service /etc/systemd/system/ip_change_mon.service
 
     systemctl daemon-reload
-    echo "systemctl enable tproxyrule"
+    echo "systemctl enable tproxyrule, ip_change_mon"
     systemctl enable tproxyrule
+    systemctl enable ip_change_mon
     # service tproxyrule status
     # echo "systemctl start tproxyrule"
     # systemctl start tproxyrule
