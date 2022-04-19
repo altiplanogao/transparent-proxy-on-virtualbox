@@ -21,7 +21,4 @@ expand_net_vars
 
 ensure_default_route_exist
 
-/sbin/ip rule add fwmark 1 table 100
-/sbin/ip route add local 0.0.0.0/0 dev lo table 100
 
-/sbin/iptables-restore /etc/iptables/rules.v4
