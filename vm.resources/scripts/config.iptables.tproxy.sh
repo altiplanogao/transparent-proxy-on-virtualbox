@@ -6,8 +6,8 @@ iptables -t mangle -F
 iptables -t mangle -X
 
 echo "preserve established connection"
-iptables -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
-iptables -A OUTPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
+# iptables -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
+# iptables -A OUTPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
 
 # https://guide.v2fly.org/app/tproxy.html
 # https://xtls.github.io/document/level-2/transparent_proxy/transparent_proxy.html
