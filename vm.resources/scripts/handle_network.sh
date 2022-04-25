@@ -7,14 +7,15 @@ check_network() {
     for ip in "${inet_ips[@]}"
     do
         local subnet=`ipcalc -nb $ip | grep Network: | sed "s|Network:||g" | sed "s/^[[:space:]]*//g" | sed "s/[[:space:]]*$//g"`
+        local address=`ipcalc -nb $ip | grep Address: | sed "s|Address:||g" | sed "s/^[[:space:]]*//g" | sed "s/[[:space:]]*$//g"`
         echo "  checking... ${ip} belongs to ${subnet}"
-        if [[ "${LAN_NETWORK}" = "${subnet}" ]]; then
-            echo "[SUCCESS]"
+        if [[ "${LAN_NETWORK}-${PROXY_IP}" = "${subnet}-${address}" ]]; then
+            echo "[SUCCESS] found: ${ip} belongs to ${subnet}."
             return
         fi
     done
 
-    echo "[FATAL] no ip belongs to network \"${LAN_NETWORK}\", please check"
+    echo "[FATAL] please check : 1. if ${PROXY_IP} belongs to the host? 2. if the ip belongs to network \"${LAN_NETWORK}\""
     exit 1
 }
 
