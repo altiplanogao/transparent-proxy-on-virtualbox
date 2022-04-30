@@ -27,7 +27,6 @@
         }
       }
     },{
-      "tag": "socks-inbound",
       "port": %PROXY_PORT%,
       "listen": "0.0.0.0",
       "protocol": "socks",
@@ -172,8 +171,7 @@
         "domains": [
           "geosite:geolocation-!cn"
         ]
-      },
-      "localhost"
+      }
     ]
   },
 

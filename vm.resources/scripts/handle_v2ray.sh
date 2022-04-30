@@ -9,12 +9,22 @@ install_and_start_v2ray() {
     echo "Command: ${installer}/install-release.sh -l ${bin}"
     echo '' | ${installer}/install-release.sh -l ${bin}
 
+    # daily update data
+    echo "Setup crontab: daily-update v2ray data"
+    install -m 755 ${installer}/install-dat-release.sh /usr/local/bin/install-dat-release
+    echo "Crontab: remove previous setting"
+    crontab -l | grep -v '/usr/local/bin/install-dat-release' | crontab -
+    echo "Crontab: add daily task (data update)"
+    (crontab -l ; echo "0 0 * * * /usr/local/bin/install-dat-release > /dev/null 2>&1") | crontab -
+    echo "Crontab: check"
+    crontab -l
+
     # use config file
-    echo "apply prepared v2ray config"
+    echo "Apply prepared v2ray config"
     cp "${WD}/templates.resolved/v2ray.config.client.${PROXY_MODE}" /usr/local/etc/v2ray/config.json
 
     # enable service
-    echo "enable v2ray service"
+    echo "Enable v2ray service"
     systemctl enable v2ray
     systemctl start v2ray
 }

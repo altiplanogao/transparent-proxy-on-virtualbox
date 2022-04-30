@@ -139,3 +139,7 @@ $ #### Do the right thing to your router. ####
 ## Step 4, Aha ...
 Connect any device to the router without any proxy setting. Enjoy ... 
 
+## 参考
+1. https://github.com/v2fly/v2ray-core
+1. https://github.com/v2fly/fhs-install-v2ray
+1. https://guide.v2fly.org/app/tproxy.html
