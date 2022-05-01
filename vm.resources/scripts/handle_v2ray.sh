@@ -9,6 +9,15 @@ install_and_start_v2ray() {
     echo "using command: ${installer}/install-release.sh -l ${bin}"
     echo '' | ${installer}/install-release.sh -l ${bin}
 
+    # use config file
+    echo "[Apply config] prepared v2ray config"
+    cp "${WD}/templates.resolved/v2ray.config.client.${PROXY_MODE}" /usr/local/etc/v2ray/config.json
+
+    # enable service
+    echo "[Enable] v2ray service"
+    systemctl enable v2ray
+    systemctl start v2ray
+
     echo "[Update v2ray data], after proxy enabled"
     /usr/local/bin/install-dat-release > /dev/null 2>&1
 
@@ -22,13 +31,4 @@ install_and_start_v2ray() {
     echo "Crontab: check"
     # check log by: grep CRON /var/log/syslog
     crontab -l
-
-    # use config file
-    echo "[Apply config] prepared v2ray config"
-    cp "${WD}/templates.resolved/v2ray.config.client.${PROXY_MODE}" /usr/local/etc/v2ray/config.json
-
-    # enable service
-    echo "Enable v2ray service"
-    systemctl enable v2ray
-    systemctl start v2ray
 }
