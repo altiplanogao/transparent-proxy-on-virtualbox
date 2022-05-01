@@ -1,10 +1,13 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
+# Find vagrant boxes: https://app.vagrantup.com/boxes/search
 SUPPORTED_OS = {
   "ubuntu1604"          => {box: "generic/ubuntu1604",         user: "vagrant"},
   "ubuntu1804"          => {box: "generic/ubuntu1804",         user: "vagrant"},
   "ubuntu2004"          => {box: "generic/ubuntu2004",         user: "vagrant"},
+  "ubuntu20.04"         => {box: "ubuntu/focal64",             user: "vagrant"},
+  "debian-11"           => {box: "debian/bullseye64",          user: "vagrant"},
 }
 
 $lan_ip = ENV['PROXY_IP']
@@ -14,7 +17,7 @@ $router_ip=ENV['ROUTER_IP']
 $proxy_vm_name=ENV['VM_NAME']
 $vm_memory = 512
 $vm_cpus = 1
-$os ||= "ubuntu2004"
+$os ||= "ubuntu20.04"
 
 puts "Vagrantfile vm name: %s" % $proxy_vm_name
 host_vars = {}
@@ -48,6 +51,7 @@ Vagrant.configure("2") do |config|
     # copy private key so hosts can ssh using key authentication (the script below sets permissions to 600)
     node.vm.provision "file", source: "~/.ssh/authorized_keys", destination: ".ssh/authorized_keys"
     node.vm.provision "file", source: "~/.ssh/id_rsa.pub", destination: "host_id_rsa.pub"
+    node.vm.provision "shell", path: "scripts/vm/login_enable_key.sh", privileged: false
     node.vm.provision "file", source: "vm.resources.suite", destination: "$HOME/resources"
 
     $script = "
@@ -59,7 +63,6 @@ Vagrant.configure("2") do |config|
 
     # node.vm.provision "shell", path: "scripts/vm/system_initialize.sh"
     node.vm.provision "shell", path: "scripts/vm/bootstrap_entry.sh"
-    node.vm.provision "shell", path: "scripts/vm/login_enable_key.sh", privileged: false
     node.vm.provision "shell", path: "scripts/vm/login_disable_password.sh"
   end
 end
