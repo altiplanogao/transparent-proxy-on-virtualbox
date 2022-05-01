@@ -7,10 +7,12 @@ install_dependency_tools() {
     if [[ -f ${from} ]]; then
         cp ${from} /etc/apt/sources.list
     fi
+    echo "[apt-get update]"
     apt-get update
     
-    echo "[Install] Dependency packages"
+    echo "[Install Dependency]"
     apt-get install net-tools iptables ipcalc -y
+    echo "[Install Dependency] done"
 }
 
 install_deb_pkgs() {
