@@ -13,7 +13,7 @@ $ wd=`pwd`
 $ mkdir foo/conf
 $ mkdir foo/data
 $ # prepare config file
-$ cp ..../v2ray.config.server foo/conf/config.json
+$ cp ..../v2ray.config.client foo/conf/config.json
 $ # prepare v2ray data
 $ cd foo
 $ cat <<EOT > update_v2ray_data.sh

@@ -89,6 +89,16 @@ identify_the_operating_system_and_architecture() {
       echo "error: Don't use outdated Linux distributions."
       exit 1
     fi
+  elif [ "$(uname)" == 'Darwin' ]; then
+    case "$(uname -m)" in
+      'amd64' | 'x86_64')
+        MACHINE='64'
+        ;;
+      *)
+        echo "error: The architecture is not supported."
+        exit 1
+        ;;
+    esac
   else
     echo "error: This operating system is not supported."
     exit 1
