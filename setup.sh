@@ -11,6 +11,9 @@ vm_prefix="v2ray2"
 . $BASEDIR/scripts/host/handle_resource.sh
 . $BASEDIR/scripts/host/vbox_utils.sh
 
+ALLOW_LOCAL_INSTALL='1'
+ALLOW_VIRTUALBOX_AUTO_START='1'
+
 should_run_as_normal_user() {
     username=`id -u -n`
     sudoer=${SUDO_USER}
@@ -90,6 +93,8 @@ identify_the_operating_system_and_architecture() {
       exit 1
     fi
   elif [ "$(uname)" == 'Darwin' ]; then
+    ALLOW_LOCAL_INSTALL='0'
+    ALLOW_VIRTUALBOX_AUTO_START='0'
     case "$(uname -m)" in
       'amd64' | 'x86_64')
         MACHINE='64'
@@ -170,6 +175,11 @@ ask_and_do_setup_autostart() {
 }
 
 install_local() {
+    if [[ "$ALLOW_LOCAL_INSTALL" -eq '0' ]]; then
+        echo "[ERROR] Local install not allowed on this machine ..."
+        exit 1
+    fi
+
     print_block_header "INSTALL LOCAL START"
     sudo rm -rf /resources
     sudo mv $BASEDIR/vm.resources.suite /resources
@@ -181,7 +191,10 @@ install_local() {
 
 reinstall_vm() {
     do_install_vm
-    ask_and_do_setup_autostart
+    
+    if [[ "$ALLOW_VIRTUALBOX_AUTO_START" -eq '1' ]]; then
+        ask_and_do_setup_autostart
+    fi
 }
 
 # ===============================================
