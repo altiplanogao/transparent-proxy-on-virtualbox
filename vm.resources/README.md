@@ -6,8 +6,9 @@ $ sudo ./bootstrap.sh
 
 # Example of running v2ray container:
 
+Prepare image run directory
 ```shell
-$ # prepare directory
+$ # prepare docker run directory
 $ mkdir foo
 $ wd=`pwd`
 $ mkdir foo/conf
@@ -35,15 +36,18 @@ echo "With command: crontab -e"
 echo "With line content: \"0 0 * * * ${wd}/update_v2ray_data.sh\""
 
 EOT
+```
 
+Run service
+```shell
 $ # run update script (and the script will print docker service command)
 $ . ./update_v2ray_data.sh
-$ # run proxy as docker service (with the)
+$ # run proxy as docker service 
 $ docker service create --name v2ray-client-at-1080 --mount type=bind,source=/<full-path>/foo/conf,target=/etc/v2ray --mount type=bind,source=/<full-path>/foo/data,target=/usr/local/share/v2ray/,readonly --publish 1080:10086 v2fly/v2fly-core
 $ # stop the service
 $ docker service rm v2ray-client-at-1080
 ```
 
-
-https://hub.docker.com/r/v2fly/v2fly-core
-https://github.com/v2fly/docker
+# References
+1. [v2fly-core](https://hub.docker.com/r/v2fly/v2fly-core)
+1. [v2fly-docker](https://github.com/v2fly/docker)
