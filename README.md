@@ -6,7 +6,7 @@
     * 以下OS经测试: Ubuntu/focal64、 Debian/bullseye64、 Raspberry Pi OS
 * 配置到虚拟机时，将在主机内安装一个虚拟机，然后把v2ray及配置安装到虚拟机内。
     * 虚拟机网络将和主机网络桥接（即在同一个子网内）
-    * 需安装虚拟机软件: [VirtualBox](https://www.virtualbox.org/)、[Vagrant](https://www.vagrantup.com/downloads)
+    * 主机需安装虚拟机软件: [VirtualBox](https://www.virtualbox.org/)、[Vagrant](https://www.vagrantup.com/downloads)
     * 以下主机OS经测试: Ubuntu/focal64、macOS Monterey
 
 <!-- https://guide.v2fly.org/en_US/app/transparent_proxy.html#pros -->
@@ -19,10 +19,10 @@
 
 主机安装以下软件: git、ipcalc
 ``` shell
-$ # 如为Debian
+$ # 如主机为Debian
 $ sudo apt install git ipcalc
 
-$ # 如为macOS (Homebrew)
+$ # 如主机为macOS (Homebrew)
 $ brew install ipcalc
 $ brew install git
 ```
@@ -93,7 +93,7 @@ $ #### Do the right thing to your router. ####
 $ # 生成安装脚本目录（生成的文件位于 ./vm.resources.suite）
 $ ./setup.sh -g
 ```
-把目录（./vm.resources.suite）拷贝到目标主机上，再执行如下命令：
+把生成的目录（./vm.resources.suite）拷贝到目标主机上，再执行如下命令：
 ```bash
 $ sudo ./bootstrap.sh
 ```
